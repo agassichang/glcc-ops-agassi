@@ -122,3 +122,93 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 .btn { background: var(--amber); color: #1a1205; border: none; border-radius: 9px; padding: 9px 16px; font-size: 14px; font-weight: 600; cursor: pointer; }
 .btn:disabled { opacity: 0.6; cursor: default; }
 .brief { white-space: pre-wrap; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin: 14px 0 0; font-size: 13px; line-height: 1.6; color: var(--text); font-family: inherit; }
+
+/* ---- Mobile top bar + drawer: hidden on desktop, so desktop is unchanged ---- */
+.topbar, .nav-overlay { display: none; }
+
+/* ============================================================
+   MOBILE / TABLET (≤ 819px). Desktop (≥ 820px) is untouched.
+   ============================================================ */
+@media (max-width: 819px) {
+  html, body { overflow-x: hidden; }
+  body { font-size: 16px; }
+
+  /* Fixed top bar with hamburger + brand (respects the notch). */
+  .topbar {
+    display: flex; align-items: center; gap: 12px;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    height: calc(52px + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) 14px 0;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+  }
+  .topbrand { display: flex; align-items: center; gap: 9px; font-weight: 600; font-size: 16px; color: var(--amber); }
+  .topbrand .logo { width: 24px; height: 24px; border-radius: 7px; background: var(--amber); display: inline-block; }
+  .hamburger {
+    display: flex; flex-direction: column; justify-content: center; gap: 5px;
+    width: 44px; height: 44px; margin-left: -10px; padding: 10px;
+    background: none; border: none; cursor: pointer;
+  }
+  .hamburger span { display: block; height: 2px; width: 22px; background: var(--text); border-radius: 2px; }
+
+  /* Sidebar becomes a slide-in drawer. */
+  .app { display: block; }
+  .side {
+    position: fixed; top: 0; bottom: 0; left: 0;
+    width: 80vw; max-width: 290px;
+    transform: translateX(-100%); transition: transform .25s ease;
+    z-index: 60; overflow-y: auto;
+    padding-top: calc(18px + env(safe-area-inset-top));
+  }
+  .side .brand { display: none; } /* brand already shown in the top bar */
+  body.nav-open .side { transform: translateX(0); }
+  body.nav-open { overflow: hidden; }
+  .nav-overlay {
+    display: block; position: fixed; inset: 0; z-index: 55;
+    background: rgba(0,0,0,.55);
+    opacity: 0; pointer-events: none; transition: opacity .25s;
+  }
+  body.nav-open .nav-overlay { opacity: 1; pointer-events: auto; }
+
+  /* Nav links: ≥44px tap targets. */
+  .nav { gap: 4px; }
+  .nav a { display: flex; align-items: center; min-height: 44px; padding: 0 12px; font-size: 15px; }
+
+  /* Content sits below the fixed bar; honour bottom safe-area. */
+  .main { padding: calc(52px + env(safe-area-inset-top) + 16px) 16px calc(16px + env(safe-area-inset-bottom)); }
+  .ph { font-size: 20px; }
+  .cap { margin-bottom: 18px; }
+
+  /* Stat cards: clean 2-up, numbers don't wrap. */
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .stat { padding: 14px; }
+  .stat .v { font-size: 21px; white-space: nowrap; }
+
+  /* Pipeline stages stack vertically. */
+  .cols { flex-direction: column; gap: 16px; }
+
+  /* Tables → one stacked card per row (label : value). */
+  .tbl { border: none; background: none; border-radius: 0; }
+  .tbl thead { display: none; }
+  .tbl tbody, .tbl tr, .tbl td { display: block; }
+  .tbl tr {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 4px 14px; margin-bottom: 10px;
+  }
+  .tbl td {
+    display: flex; justify-content: space-between; align-items: center; gap: 14px;
+    padding: 9px 0; border-bottom: 1px solid var(--border);
+    font-size: 15px; text-align: right;
+  }
+  .tbl tr td:last-child { border-bottom: none; }
+  .tbl td::before {
+    content: attr(data-label);
+    color: var(--muted); font-size: 13px; font-weight: 500;
+    text-align: left; flex-shrink: 0;
+  }
+
+  /* Buttons: ≥44px tall. */
+  .btn { min-height: 44px; }
+
+  /* Agents office a touch shorter on small screens. */
+  .office { height: 300px; }
+}

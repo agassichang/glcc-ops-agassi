@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect } from 'react'
 
 // Add a tab? Add one line here + a matching app/<name>/page.tsx. That's it.
 const TABS = [
@@ -16,10 +17,17 @@ const TABS = [
 
 export default function Nav() {
   const path = usePathname()
+  // Close the mobile drawer whenever the route changes.
+  useEffect(() => { document.body.classList.remove('nav-open') }, [path])
   return (
     <nav className="nav">
       {TABS.map(t => (
-        <Link key={t.href} href={t.href} className={path === t.href ? 'active' : ''}>
+        <Link
+          key={t.href}
+          href={t.href}
+          className={path === t.href ? 'active' : ''}
+          onClick={() => document.body.classList.remove('nav-open')}
+        >
           {t.label}
         </Link>
       ))}
