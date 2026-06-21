@@ -32,6 +32,22 @@ export default async function Influencers() {
     ['On YouTube', rows.filter(r => has(r, 'youtube')).length],
   ]
 
+  // Mock referral code from the name: FIRST + "15" (e.g. Ain Ramli → AIN15).
+  // If the first name is shared by more than one KOL, use the full name instead
+  // to keep codes unique (e.g. AINRAMLI15).
+  const firstName = (n: string) => (n.trim().split(/\s+/)[0] || '').toUpperCase().replace(/[^A-Z0-9]/g, '')
+  const fullName = (n: string) => n.toUpperCase().replace(/[^A-Z0-9]/g, '')
+  const firstFreq = new Map<string, number>()
+  for (const r of rows) {
+    const f = firstName(r.title || '')
+    if (f) firstFreq.set(f, (firstFreq.get(f) || 0) + 1)
+  }
+  const refCode = (name: string) => {
+    const f = firstName(name)
+    if (!f) return ''
+    return ((firstFreq.get(f) || 0) > 1 ? fullName(name) : f) + '15'
+  }
+
   const items: Influencer[] = rows.map(r => ({
     id: r.id,
     name: r.title,
@@ -42,7 +58,7 @@ export default async function Influencers() {
     ttFollowers: r.meta?.tt_followers ?? '',
     ttLikes: r.meta?.tt_likes ?? '',
     ytFollowers: r.meta?.yt_followers ?? '',
-    referralCode: r.meta?.referral_code ?? '',
+    referralCode: refCode(r.title),
   }))
 
   return (
