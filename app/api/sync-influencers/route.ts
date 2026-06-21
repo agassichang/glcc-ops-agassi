@@ -33,12 +33,15 @@ export async function GET(req: Request) {
   }
   const parsed = parseCsv(await res.text())
 
-  // Preserve any manually-assigned tiers across re-sync (matched by name).
+  // Preserve manual edits (tier + referral code) across re-sync, matched by name.
   const { data: existing } = await supabase.from('records').select('title, meta').eq('category', 'influencer')
-  const tierByName = new Map<string, number>()
+  const keepByName = new Map<string, { tier?: number; referral_code?: string }>()
   for (const e of existing ?? []) {
-    const t = Number((e.meta as any)?.tier)
-    if ([1, 2, 3].includes(t)) tierByName.set((e.title || '').trim().toLowerCase(), t)
+    const m = (e.meta as any) ?? {}
+    const keep: { tier?: number; referral_code?: string } = {}
+    if ([1, 2, 3].includes(Number(m.tier))) keep.tier = Number(m.tier)
+    if (m.referral_code) keep.referral_code = String(m.referral_code)
+    if (Object.keys(keep).length) keepByName.set((e.title || '').trim().toLowerCase(), keep)
   }
 
   // Pull ONLY these safe columns. Anything not listed here (phone, DOB, email,
@@ -62,14 +65,22 @@ export async function GET(req: Request) {
         youtube: clean(r['youtube']),
         join_date: clean(r['join date']),
         referral_code: clean(r['referral code']),
+        height_cm: clean(r['height (cm)']),
+        weight_kg: clean(r['weight (kg)']),
+        size_top: clean(r['size [top]']),
+        size_bottom: clean(r['size [bottom]']),
+        bust_in: clean(r['bust (inch)']),
+        waist_in: clean(r['waist (inch)']),
+        hip_in: clean(r['hip (inch)']),
       },
     }))
     .filter(r => r.title)
 
-  // Re-apply preserved tiers (by name) so re-syncing the sheet never loses them.
+  // Re-apply preserved manual edits (tier + referral) so re-syncing never loses them.
   for (const rec of records) {
-    const t = tierByName.get(rec.title.toLowerCase())
-    if (t) (rec.meta as any).tier = t
+    const keep = keepByName.get(rec.title.toLowerCase())
+    if (keep?.tier) (rec.meta as any).tier = keep.tier
+    if (keep?.referral_code) (rec.meta as any).referral_code = keep.referral_code
   }
 
   if (records.length === 0) {

@@ -63,6 +63,7 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 .pf-val { overflow-wrap: anywhere; }
 .pf-stats { color: var(--dim); }
 .pf-empty { color: var(--dim); }
+.size-head { margin-top: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--dim); border-top: 1px solid var(--border); padding-top: 9px; }
 
 /* Toolbar: search + sort toggle (16px inputs so iOS doesn't zoom on focus). */
 .toolbar { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }

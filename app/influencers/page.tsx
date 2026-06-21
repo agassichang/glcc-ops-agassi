@@ -65,6 +65,13 @@ export default async function Influencers() {
     ytFollowers: r.meta?.yt_followers ?? '',
     referralCode: realStr(r.meta?.referral_code) || refCode(r.title),
     tier: [1, 2, 3].includes(Number(r.meta?.tier)) ? Number(r.meta?.tier) : null,
+    heightCm: String(r.meta?.height_cm ?? ''),
+    weightKg: String(r.meta?.weight_kg ?? ''),
+    sizeTop: String(r.meta?.size_top ?? ''),
+    sizeBottom: String(r.meta?.size_bottom ?? ''),
+    bust: String(r.meta?.bust_in ?? ''),
+    waist: String(r.meta?.waist_in ?? ''),
+    hip: String(r.meta?.hip_in ?? ''),
   }))
 
   return (

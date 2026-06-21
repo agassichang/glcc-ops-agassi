@@ -16,6 +16,13 @@ export type Influencer = {
   ytFollowers: string | number
   referralCode: string
   tier: number | null
+  heightCm: string
+  weightKg: string
+  sizeTop: string
+  sizeBottom: string
+  bust: string
+  waist: string
+  hip: string
 }
 
 const real = (v: string | number) => {
@@ -53,6 +60,33 @@ function Platform({ label, base, raw, stats }: {
         {stats.length > 0 && <span className="pf-stats"> · {stats.join(' · ')}</span>}
       </span>
     </div>
+  )
+}
+
+function Sizing({ it }: { it: Influencer }) {
+  // Append a unit only when the cell is a bare number (the sheet is inconsistent —
+  // some cells already include "cm"/"inch").
+  const wu = (v: string, unit: string) => {
+    const s = real(v)
+    return s ? (/[a-z]/i.test(s) ? s : `${s} ${unit}`) : ''
+  }
+  const rows = ([
+    ['Height', wu(it.heightCm, 'cm')],
+    ['Weight', wu(it.weightKg, 'kg')],
+    ['Top size', real(it.sizeTop)],
+    ['Bottom size', real(it.sizeBottom)],
+    ['Bust', wu(it.bust, 'inch')],
+    ['Waist', wu(it.waist, 'inch')],
+    ['Hip', wu(it.hip, 'inch')],
+  ] as [string, string][]).filter(([, v]) => v)
+  if (rows.length === 0) return null
+  return (
+    <>
+      <div className="size-head">Sizing</div>
+      {rows.map(([l, v]) => (
+        <div className="pf" key={l}><span className="pf-label">{l}</span><span className="pf-val">{v}</span></div>
+      ))}
+    </>
   )
 }
 
@@ -205,6 +239,7 @@ export default function InfluencerList({ items }: { items: Influencer[] }) {
                   <Platform label="TikTok" base="tiktok" raw={it.tiktok} stats={ttStats} />
                   <Platform label="YouTube" base="youtube" raw={it.youtube} stats={ytStats} />
                   {noPlatforms && <div className="pf"><span className="pf-val pf-empty">No platforms on file</span></div>}
+                  <Sizing it={it} />
                   <div className="pf">
                     <span className="pf-label">Referral Code</span>
                     <span className="pf-val ref-edit">
