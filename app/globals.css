@@ -42,6 +42,8 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 .tbl th, .tbl td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
 .tbl th { color: var(--muted); font-weight: 500; font-size: 12px; }
 .tbl tr:last-child td { border-bottom: none; }
+.ext { color: var(--amber); text-decoration: none; }
+.ext:hover { text-decoration: underline; }
 
 .pill { display: inline-block; font-size: 12px; padding: 2px 9px; border-radius: 6px; font-weight: 500; background: var(--surface2); color: var(--muted); }
 .pill.open, .pill.new, .pill.contacted { background: rgba(55,138,221,0.16); color: #8ec5ff; }

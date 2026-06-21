@@ -12,6 +12,24 @@ const has = (r: { meta?: Record<string, any> }, k: string) => {
   return v != null && v !== '' && v !== '-'
 }
 
+// Render an Instagram handle/URL as a link that opens the profile in a new tab.
+// Handles full URLs, "@handle", and plain "handle"; shows a dash when empty.
+function InstagramCell({ raw }: { raw: unknown }) {
+  const s = String(raw ?? '').trim()
+  if (!s || s === '—' || /^n\/?a$/i.test(s)) return <>—</>
+  let handle: string, href: string
+  if (/^https?:\/\//i.test(s)) {
+    href = s
+    const match = s.match(/instagram\.com\/([^/?#\s]+)/i)
+    handle = match ? '@' + match[1] : s
+  } else {
+    const clean = s.replace(/^@/, '').replace(/\s+/g, '')
+    handle = '@' + clean
+    href = 'https://www.instagram.com/' + clean
+  }
+  return <a href={href} target="_blank" rel="noopener noreferrer" className="ext">{handle}</a>
+}
+
 export default async function Influencers() {
   const all = await getRecords()
   const rows = all.filter(r => r.category === 'influencer')
@@ -51,7 +69,7 @@ export default async function Influencers() {
             {rows.map(r => (
               <tr key={r.id}>
                 <td data-label="Name">{r.title}</td>
-                <td data-label="Instagram">{m(r, 'instagram')}</td>
+                <td data-label="Instagram"><InstagramCell raw={r.meta?.instagram} /></td>
                 <td data-label="TikTok">{m(r, 'tiktok')}</td>
                 <td data-label="YouTube">{m(r, 'youtube')}</td>
                 <td data-label="Join date">{m(r, 'join_date')}</td>
