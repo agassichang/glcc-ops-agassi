@@ -16,6 +16,16 @@ export default async function Influencers() {
   const all = await getRecords()
   const rows = all.filter(r => r.category === 'influencer')
 
+  // Sort A→Z by name; names that don't start with a letter (numbers, symbols,
+  // blanks) sort after Z.
+  const startsAlpha = (s: string) => /^[a-z]/i.test(s.trim())
+  rows.sort((a, b) => {
+    const A = (a.title || '').trim(), B = (b.title || '').trim()
+    const aAlpha = startsAlpha(A), bAlpha = startsAlpha(B)
+    if (aAlpha !== bAlpha) return aAlpha ? -1 : 1
+    return A.localeCompare(B, undefined, { sensitivity: 'base' })
+  })
+
   const cards: [string, string | number][] = [
     ['Total influencers', rows.length],
     ['On Instagram', rows.filter(r => has(r, 'instagram')).length],
