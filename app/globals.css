@@ -187,23 +187,31 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
   .cols { flex-direction: column; gap: 16px; }
 
   /* Tables → one stacked card per row (label : value). */
-  .tbl { border: none; background: none; border-radius: 0; }
+  /* display:block on the table is key — otherwise it keeps table layout and
+     sizes to its content, pushing right-aligned values off a narrow screen. */
+  .tbl { display: block; border: none; background: none; border-radius: 0; }
   .tbl thead { display: none; }
-  .tbl tbody, .tbl tr, .tbl td { display: block; }
+  .tbl tbody, .tbl tr { display: block; }
   .tbl tr {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 12px; padding: 4px 14px; margin-bottom: 10px;
   }
+  /* Two-track grid: label hugs left, value takes the rest and WRAPS (never
+     overflows). minmax(0,1fr) lets the value column shrink so text can wrap. */
   .tbl td {
-    display: flex; justify-content: space-between; align-items: center; gap: 14px;
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: 14px;
+    align-items: baseline;
     padding: 9px 0; border-bottom: 1px solid var(--border);
     font-size: 15px; text-align: right;
+    overflow-wrap: anywhere;
   }
   .tbl tr td:last-child { border-bottom: none; }
   .tbl td::before {
     content: attr(data-label);
     color: var(--muted); font-size: 13px; font-weight: 500;
-    text-align: left; flex-shrink: 0;
+    text-align: left;
   }
 
   /* Buttons: ≥44px tall. */
