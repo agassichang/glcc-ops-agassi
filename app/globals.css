@@ -45,6 +45,25 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 .ext { color: var(--amber); text-decoration: none; }
 .ext:hover { text-decoration: underline; }
 
+/* Collapsible influencer list: names only, tap to reveal platforms. */
+.acc { display: flex; flex-direction: column; gap: 8px; }
+.acc-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.acc-head {
+  width: 100%; min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: none; border: none; color: var(--text); cursor: pointer; padding: 13px 16px;
+  font-size: 15px; font-family: inherit; text-align: left;
+}
+.acc-head:hover { background: var(--surface2); }
+.acc-name { font-weight: 500; }
+.acc-caret { color: var(--dim); font-size: 20px; line-height: 1; flex-shrink: 0; }
+.acc-item.open { border-color: var(--amber); }
+.acc-body { padding: 4px 16px 14px; display: flex; flex-direction: column; gap: 9px; border-top: 1px solid var(--border); }
+.pf { display: grid; grid-template-columns: 92px minmax(0, 1fr); column-gap: 12px; align-items: baseline; font-size: 14px; }
+.pf-label { color: var(--muted); font-size: 13px; }
+.pf-val { overflow-wrap: anywhere; }
+.pf-stats { color: var(--dim); }
+.pf-empty { color: var(--dim); }
+
 .pill { display: inline-block; font-size: 12px; padding: 2px 9px; border-radius: 6px; font-weight: 500; background: var(--surface2); color: var(--muted); }
 .pill.open, .pill.new, .pill.contacted { background: rgba(55,138,221,0.16); color: #8ec5ff; }
 .pill.pending { background: rgba(239,159,39,0.16); color: #ffcf80; }

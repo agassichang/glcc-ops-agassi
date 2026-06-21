@@ -1,41 +1,22 @@
-import { getRecords, m } from '@/lib/records'
+import { getRecords } from '@/lib/records'
 import Empty from '@/app/_components/Empty'
+import InfluencerList, { type Influencer } from './InfluencerList'
 
 export const dynamic = 'force-dynamic'
 
 // Influencer marketing roster. category === 'influencer'. Marketing-safe fields
-// (social handles, join date, referral code) live in `meta`. We deliberately do
-// NOT store any PII (phone, DOB, email, address, measurements) — see the sync
-// route. Same one-table, server-component pattern as every other tab.
+// (social handles, follower stats, referral code) live in `meta`. No PII is ever
+// read. Data is fetched here on the server; the collapsible UI is a client child.
 const has = (r: { meta?: Record<string, any> }, k: string) => {
   const v = r.meta?.[k]
   return v != null && v !== '' && v !== '-'
-}
-
-// Render an Instagram handle/URL as a link that opens the profile in a new tab.
-// Handles full URLs, "@handle", and plain "handle"; shows a dash when empty.
-function InstagramCell({ raw }: { raw: unknown }) {
-  const s = String(raw ?? '').trim()
-  if (!s || s === '—' || /^n\/?a$/i.test(s)) return <>—</>
-  let handle: string, href: string
-  if (/^https?:\/\//i.test(s)) {
-    href = s
-    const match = s.match(/instagram\.com\/([^/?#\s]+)/i)
-    handle = match ? '@' + match[1] : s
-  } else {
-    const clean = s.replace(/^@/, '').replace(/\s+/g, '')
-    handle = '@' + clean
-    href = 'https://www.instagram.com/' + clean
-  }
-  return <a href={href} target="_blank" rel="noopener noreferrer" className="ext">{handle}</a>
 }
 
 export default async function Influencers() {
   const all = await getRecords()
   const rows = all.filter(r => r.category === 'influencer')
 
-  // Sort A→Z by name; names that don't start with a letter (numbers, symbols,
-  // blanks) sort after Z.
+  // Sort A→Z by name; names that don't start with a letter sort after Z.
   const startsAlpha = (s: string) => /^[a-z]/i.test(s.trim())
   rows.sort((a, b) => {
     const A = (a.title || '').trim(), B = (b.title || '').trim()
@@ -51,10 +32,23 @@ export default async function Influencers() {
     ['On YouTube', rows.filter(r => has(r, 'youtube')).length],
   ]
 
+  const items: Influencer[] = rows.map(r => ({
+    id: r.id,
+    name: r.title,
+    instagram: r.meta?.instagram ?? '',
+    tiktok: r.meta?.tiktok ?? '',
+    youtube: r.meta?.youtube ?? '',
+    igFollowers: r.meta?.ig_followers ?? '',
+    ttFollowers: r.meta?.tt_followers ?? '',
+    ttLikes: r.meta?.tt_likes ?? '',
+    ytFollowers: r.meta?.yt_followers ?? '',
+    referralCode: r.meta?.referral_code ?? '',
+  }))
+
   return (
     <>
       <h1 className="ph">Influencer Marketing</h1>
-      <p className="cap">Creators &amp; ambassadors · {rows.length} total</p>
+      <p className="cap">Creators &amp; ambassadors · {rows.length} total · tap a name for details</p>
       <div className="grid">
         {cards.map(([l, v]) => (
           <div className="stat" key={l}><p className="l">{l}</p><p className="v">{v}</p></div>
@@ -63,21 +57,7 @@ export default async function Influencers() {
       {all.length === 0 ? <Empty /> : rows.length === 0 ? (
         <p className="empty">No influencers yet — sync your Google Sheet via <code>/api/sync-influencers</code>.</p>
       ) : (
-        <table className="tbl">
-          <thead><tr><th>Name</th><th>Instagram</th><th>TikTok</th><th>YouTube</th><th>Join date</th><th>Referral code</th></tr></thead>
-          <tbody>
-            {rows.map(r => (
-              <tr key={r.id}>
-                <td data-label="Name">{r.title}</td>
-                <td data-label="Instagram"><InstagramCell raw={r.meta?.instagram} /></td>
-                <td data-label="TikTok">{m(r, 'tiktok')}</td>
-                <td data-label="YouTube">{m(r, 'youtube')}</td>
-                <td data-label="Join date">{m(r, 'join_date')}</td>
-                <td data-label="Referral code">{m(r, 'referral_code')}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <InfluencerList items={items} />
       )}
     </>
   )
