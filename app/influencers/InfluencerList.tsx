@@ -64,6 +64,10 @@ export default function InfluencerList({ items }: { items: Influencer[] }) {
     () => Object.fromEntries(items.map(i => [i.id, i.tier]))
   )
   const [saving, setSaving] = useState<number | null>(null)
+  const [codes, setCodes] = useState<Record<number, string>>(
+    () => Object.fromEntries(items.map(i => [i.id, i.referralCode]))
+  )
+  const [savingRef, setSavingRef] = useState<number | null>(null)
 
   const view = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -87,7 +91,7 @@ export default function InfluencerList({ items }: { items: Influencer[] }) {
     setTiers(t => ({ ...t, [id]: tierVal }))
     setSaving(id)
     try {
-      const res = await fetch('/api/influencer-tier', {
+      const res = await fetch('/api/influencer-update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, tier: tierVal }),
@@ -99,6 +103,23 @@ export default function InfluencerList({ items }: { items: Influencer[] }) {
       alert('Could not save the tier — please try again.')
     } finally {
       setSaving(null)
+    }
+  }
+
+  async function saveReferral(id: number) {
+    setSavingRef(id)
+    try {
+      const res = await fetch('/api/influencer-update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, referralCode: codes[id] ?? '' }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!data.ok) throw new Error(data.reason || 'failed')
+    } catch {
+      alert('Could not save the referral code — please try again.')
+    } finally {
+      setSavingRef(null)
     }
   }
 
@@ -145,7 +166,21 @@ export default function InfluencerList({ items }: { items: Influencer[] }) {
                   <Platform label="TikTok" base="tiktok" raw={it.tiktok} stats={ttStats} />
                   <Platform label="YouTube" base="youtube" raw={it.youtube} stats={ytStats} />
                   {noPlatforms && <div className="pf"><span className="pf-val pf-empty">No platforms on file</span></div>}
-                  <div className="pf"><span className="pf-label">Referral Code</span><span className="pf-val">{real(it.referralCode) || '—'}</span></div>
+                  <div className="pf">
+                    <span className="pf-label">Referral Code</span>
+                    <span className="pf-val ref-edit">
+                      <input
+                        className="ref-input"
+                        value={codes[it.id] ?? ''}
+                        onChange={e => setCodes(c => ({ ...c, [it.id]: e.target.value }))}
+                        placeholder="—"
+                        aria-label={`Referral code for ${it.name}`}
+                      />
+                      <button className="ref-save" onClick={() => saveReferral(it.id)} disabled={savingRef === it.id}>
+                        {savingRef === it.id ? '…' : 'Save'}
+                      </button>
+                    </span>
+                  </div>
                   <div className="pf">
                     <span className="pf-label">Tier</span>
                     <span className="pf-val">

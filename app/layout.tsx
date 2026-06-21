@@ -24,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="brand"><span className="logo" aria-hidden="true" /> Your AI HQ</div>
             <Nav />
             <p className="hint">One <code>records</code> table behind all 8 tabs.</p>
+            <a className="logout" href="/api/logout">Log out</a>
           </aside>
           <main className="main"><ConnStatus />{children}</main>
         </div>

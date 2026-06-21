@@ -90,6 +90,36 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
   color: var(--text); padding: 8px 10px; font-size: 16px; font-family: inherit; min-height: 40px;
 }
 
+/* Editable referral code (input + Save). */
+.ref-edit { display: flex; gap: 8px; align-items: center; justify-content: flex-end; }
+.ref-input {
+  flex: 1; min-width: 0; max-width: 220px; text-align: right;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); padding: 8px 10px; font-size: 16px; font-family: inherit; min-height: 40px;
+}
+.ref-save {
+  flex-shrink: 0; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); padding: 0 14px; min-height: 40px; font-size: 14px; font-family: inherit; cursor: pointer;
+}
+.ref-save:hover { background: var(--border); }
+.ref-save:disabled { opacity: 0.6; cursor: default; }
+
+/* Logout link in the sidebar. */
+.logout { display: inline-block; margin-top: 10px; color: var(--dim); font-size: 12px; text-decoration: none; }
+.logout:hover { color: var(--muted); text-decoration: underline; }
+
+/* Full-screen login (covers the app chrome). */
+.login-wrap { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: grid; place-items: center; padding: 24px; }
+.login-card { width: 100%; max-width: 340px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 26px 24px; display: flex; flex-direction: column; }
+.login-title { font-size: 20px; font-weight: 600; margin: 6px 0 2px; }
+.login-sub { color: var(--muted); font-size: 13px; margin: 0 0 16px; }
+.login-input {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 9px;
+  color: var(--text); padding: 12px 13px; font-size: 16px; font-family: inherit; margin-bottom: 12px;
+}
+.login-err { color: #ff9b9b; font-size: 13px; margin: 0 0 12px; }
+.login-btn { width: 100%; min-height: 46px; }
+
 .pill { display: inline-block; font-size: 12px; padding: 2px 9px; border-radius: 6px; font-weight: 500; background: var(--surface2); color: var(--muted); }
 .pill.open, .pill.new, .pill.contacted { background: rgba(55,138,221,0.16); color: #8ec5ff; }
 .pill.pending { background: rgba(239,159,39,0.16); color: #ffcf80; }

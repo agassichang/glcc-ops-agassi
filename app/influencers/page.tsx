@@ -47,6 +47,11 @@ export default async function Influencers() {
     if (!f) return ''
     return ((firstFreq.get(f) || 0) > 1 ? fullName(name) : f) + '15'
   }
+  // Use a manually-saved referral code if present, otherwise the generated mock.
+  const realStr = (v: unknown) => {
+    const s = String(v ?? '').trim()
+    return s && s !== '-' && !/^n\/?a$/i.test(s) ? s : ''
+  }
 
   const items: Influencer[] = rows.map(r => ({
     id: r.id,
@@ -58,7 +63,7 @@ export default async function Influencers() {
     ttFollowers: r.meta?.tt_followers ?? '',
     ttLikes: r.meta?.tt_likes ?? '',
     ytFollowers: r.meta?.yt_followers ?? '',
-    referralCode: refCode(r.title),
+    referralCode: realStr(r.meta?.referral_code) || refCode(r.title),
     tier: [1, 2, 3].includes(Number(r.meta?.tier)) ? Number(r.meta?.tier) : null,
   }))
 
