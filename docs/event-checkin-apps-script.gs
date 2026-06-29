@@ -83,10 +83,10 @@ function handle(e) {
     }
 
     if (action === 'checkin') {
-      var target = digits(p.phone);
+      var target = normalizePhone(p.phone);
       if (!target) return json({ ok: false, error: 'no_phone' });
       for (var j = hRow + 1; j < values.length; j++) {
-        if (digits(values[j][idx.phone]) === target) {
+        if (normalizePhone(values[j][idx.phone]) === target) {
           var rowNumber = j + 1;
           var already = /^(yes|true|y|1)$/i.test(String(values[j][idx.checkedIn]).trim());
           if (!already) {
@@ -130,5 +130,7 @@ function handle(e) {
 function findCol(col, names) { for (var i = 0; i < names.length; i++) { if (col[names[i]] != null) return col[names[i]]; } return -1; }
 function get(r, i) { return i >= 0 ? String(r[i] == null ? '' : r[i]).trim() : ''; }
 function digits(v) { return String(v == null ? '' : v).replace(/[^0-9]/g, ''); }
+// Normalize to local digits only (strips leading 60 or 0) so 0123456789, +60123456789, 60123456789 all match.
+function normalizePhone(v) { var d = digits(v); if (d.indexOf('60') === 0) return d.slice(2); if (d.indexOf('0') === 0) return d.slice(1); return d; }
 function now() { return Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd HH:mm:ss'); }
 function json(obj) { return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON); }

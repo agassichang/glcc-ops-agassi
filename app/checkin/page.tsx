@@ -41,47 +41,60 @@ export default function CheckIn() {
   }
 
   return (
-    <div className="cos cos-center">
-      <main className="cos-narrow">
-        <p className="cos-kicker">What To Wear</p>
-        <h1 className="cos-h1">Fashion Show<br />Check-In</h1>
+    <div className="wtw">
+      <div className="wtw-hero">
+        <img src="/header-visual.png" alt="What To Wear storefront" />
+      </div>
+
+      <main className="wtw-body">
+        <p className="wtw-kicker">KLFW 2026</p>
+        <h1 className="wtw-title">10 Years of<br />What To Wear</h1>
+        <div className="wtw-rule" />
+
+        <p className="wtw-meta">
+          Show Date — 4 August 2026<br />
+          Show Time — 2PM Sharp<br />
+          Guest Arrival — 1PM
+        </p>
 
         {status === 'found' && guest ? (
-          <div className="cos-result">
-            <p className="cos-ok">{already ? 'Already checked in' : 'Checked in'} ✓</p>
-            <p className="cos-name">{guest.name}</p>
-            <dl className="cos-dl">
+          <div className="wtw-result">
+            <p className="wtw-ok">{already ? 'Already Checked In' : 'Checked In'}</p>
+            <p className="wtw-name">{guest.name}</p>
+            <dl className="wtw-dl">
               <div><dt>Seat Row</dt><dd>{guest.seatRow || '—'}</dd></div>
               <div><dt>Seat Number</dt><dd>{guest.seatNumber || '—'}</dd></div>
             </dl>
-            <button className="cos-btn cos-btn-ghost" onClick={reset}>Check in another guest</button>
+            <button className="wtw-btn wtw-btn-ghost" onClick={reset}>Check in another guest</button>
           </div>
         ) : status === 'notfound' ? (
-          <div className="cos-result">
-            <p className="cos-sad">Please see reception team.</p>
-            <p className="cos-muted">We couldn’t find that number on the guest list.</p>
-            <button className="cos-btn cos-btn-ghost" onClick={reset}>Try again</button>
+          <div className="wtw-result">
+            <p className="wtw-sad">Please see our reception team.</p>
+            <p className="wtw-muted">We couldn’t find that number on the guest list.</p>
+            <button className="wtw-btn wtw-btn-ghost" onClick={reset}>Try again</button>
           </div>
         ) : (
-          <form className="cos-form" onSubmit={submit}>
-            <label className="cos-label">Your phone number</label>
-            <div className="cos-phone">
-              <span className="cos-prefix">+601</span>
-              <input
-                className="cos-input"
-                inputMode="numeric"
-                autoComplete="tel"
-                placeholder="2345 6789"
-                value={digitsv}
-                onChange={e => setDigits(e.target.value.replace(/[^0-9]/g, ''))}
-                autoFocus
-              />
-            </div>
-            <button className="cos-btn" type="submit" disabled={status === 'loading' || digitsv.replace(/[^0-9]/g, '').length < 6}>
-              {status === 'loading' ? 'Checking…' : 'Check in'}
-            </button>
-            {status === 'error' && <p className="cos-err">Something went wrong. Please see the reception team.</p>}
-          </form>
+          <>
+            <p className="wtw-checkin">Guest Check-In</p>
+            <form className="wtw-form" onSubmit={submit}>
+              <div className="wtw-phone">
+                <span className="wtw-prefix">+601</span>
+                <input
+                  className="wtw-input"
+                  inputMode="numeric"
+                  autoComplete="tel"
+                  placeholder="2345 6789"
+                  value={digitsv}
+                  onChange={e => setDigits(e.target.value.replace(/[^0-9]/g, ''))}
+                  autoFocus
+                />
+              </div>
+              <button className="wtw-btn" type="submit" disabled={status === 'loading' || digitsv.replace(/[^0-9]/g, '').length < 6}>
+                {status === 'loading' ? 'Checking…' : 'Check In'}
+              </button>
+              {status === 'error' && <p className="wtw-err">Something went wrong. Please see the reception team.</p>}
+            </form>
+          </>
         )}
       </main>
     </div>
