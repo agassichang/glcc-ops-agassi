@@ -17,3 +17,7 @@ next-env.d.ts
 *.tsbuildinfo
 .DS_Store
 .vercel
+
+# Local design reference artifacts (not for deploy)
+public/Reference *.jpg
+public/Header Visual.png
