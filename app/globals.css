@@ -121,6 +121,83 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 .login-err { color: #ff9b9b; font-size: 13px; margin: 0 0 12px; }
 .login-btn { width: 100%; min-height: 46px; }
 
+/* ============================================================
+   Event check-in — COS-inspired light theme (full-screen layer).
+   ============================================================ */
+.cos {
+  position: fixed; inset: 0; z-index: 100; overflow-y: auto;
+  background: #fff; color: #111;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+}
+.cos *, .cos *::before, .cos *::after { box-sizing: border-box; }
+.cos-center { display: grid; place-items: center; min-height: 100%; }
+.cos-narrow { width: 100%; max-width: 420px; padding: 44px 28px 64px; }
+.cos-wide { width: 100%; max-width: 1040px; margin: 0 auto; padding: 32px 24px 90px; }
+
+.cos-kicker { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9a9a9a; margin: 0 0 18px; }
+.cos-h1 { font-size: 38px; line-height: 1.08; font-weight: 300; letter-spacing: -0.01em; margin: 0 0 38px; }
+.cos-h2 { font-size: 26px; font-weight: 300; letter-spacing: -0.01em; margin: 2px 0 0; }
+
+.cos-form { display: flex; flex-direction: column; }
+.cos-label { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #888; margin-bottom: 10px; }
+.cos-phone { display: flex; align-items: stretch; border: 1px solid #111; }
+.cos-prefix { display: flex; align-items: center; padding: 0 15px; background: #111; color: #fff; font-size: 17px; }
+.cos-input { flex: 1; min-width: 0; border: none; padding: 16px 14px; font-size: 18px; letter-spacing: 0.06em; color: #111; background: #fff; outline: none; font-family: inherit; }
+.cos-btn { margin-top: 22px; background: #111; color: #fff; border: 1px solid #111; padding: 0 22px; min-height: 52px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; font-family: inherit; transition: opacity .15s, background .15s; }
+.cos-btn:hover { opacity: 0.86; }
+.cos-btn:disabled { opacity: 0.38; cursor: default; }
+.cos-btn-ghost { background: #fff; color: #111; }
+.cos-btn-ghost:hover { background: #f4f4f4; opacity: 1; }
+.cos-sm { min-height: 40px; margin-top: 0; padding: 0 16px; font-size: 11px; letter-spacing: 0.12em; }
+.cos-err { color: #b00020; font-size: 13px; margin-top: 16px; }
+
+.cos-result { display: flex; flex-direction: column; }
+.cos-ok { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #1a7f4b; margin: 0 0 18px; }
+.cos-sad { font-size: 23px; font-weight: 300; margin: 0 0 8px; }
+.cos-name { font-size: 28px; font-weight: 400; margin: 0 0 28px; letter-spacing: -0.01em; }
+.cos-muted { color: #888; font-size: 14px; margin: 0 0 28px; }
+.cos-dl { margin: 0 0 32px; }
+.cos-dl > div { display: flex; justify-content: space-between; align-items: baseline; padding: 16px 0; border-top: 1px solid #ededed; }
+.cos-dl > div:last-child { border-bottom: 1px solid #ededed; }
+.cos-dl dt { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #9a9a9a; margin: 0; }
+.cos-dl dd { font-size: 18px; margin: 0; text-align: right; }
+
+.staff-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+.staff-headbtns { display: flex; gap: 8px; }
+.cos-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #ececec; border: 1px solid #ececec; margin-bottom: 30px; }
+.cos-stat { background: #fff; padding: 22px 18px; display: flex; flex-direction: column; gap: 6px; }
+.cos-stat-n { font-size: 34px; font-weight: 300; letter-spacing: -0.02em; }
+.cos-stat-l { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #9a9a9a; }
+.cos-note { color: #777; font-size: 14px; padding: 18px 0; line-height: 1.6; }
+.cos-note code { color: #111; background: #f3f3f3; padding: 1px 5px; }
+.cos-link { background: none; border: none; color: #111; text-decoration: underline; cursor: pointer; font: inherit; padding: 0; }
+
+.staff-tools { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.cos-field { border: 1px solid #dcdcdc; padding: 12px 12px; font-size: 16px; color: #111; background: #fff; font-family: inherit; outline: none; min-height: 44px; }
+.cos-field:focus { border-color: #111; }
+.staff-tools .cos-field:first-child { flex: 1; min-width: 200px; }
+.cos-select { min-width: 132px; }
+.cos-count { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #9a9a9a; margin: 0 0 16px; }
+
+.staff-list { display: flex; flex-direction: column; gap: 12px; }
+.staff-card { border: 1px solid #e6e6e6; padding: 18px; }
+.staff-card.is-in { border-left: 3px solid #1a7f4b; }
+.staff-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.staff-name { font-size: 17px; font-weight: 500; margin: 0 0 4px; }
+.staff-sub { font-size: 13px; color: #8a8a8a; margin: 0; line-height: 1.5; }
+.staff-in { font-size: 12px; color: #1a7f4b; margin: 10px 0 0; letter-spacing: 0.03em; }
+.staff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.staff-grid label { display: flex; flex-direction: column; gap: 6px; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: #9a9a9a; }
+.staff-remarks { grid-column: 1 / -1; }
+.staff-save { margin-top: 14px; }
+
+@media (min-width: 720px) {
+  .staff-grid { grid-template-columns: 1fr 1fr 1fr 2fr; }
+  .staff-remarks { grid-column: auto; }
+}
+
 .pill { display: inline-block; font-size: 12px; padding: 2px 9px; border-radius: 6px; font-weight: 500; background: var(--surface2); color: var(--muted); }
 .pill.open, .pill.new, .pill.contacted { background: rgba(55,138,221,0.16); color: #8ec5ff; }
 .pill.pending { background: rgba(239,159,39,0.16); color: #ffcf80; }

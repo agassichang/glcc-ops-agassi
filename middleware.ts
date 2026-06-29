@@ -13,6 +13,9 @@ const OPEN = [
   '/api/jarvis-oyen',
   '/api/shopify-sales',
   '/api/sync-influencers',
+  // Public guest check-in (the staff dashboard /staff stays gated).
+  '/checkin',
+  '/api/event/checkin',
 ]
 
 export async function middleware(req: NextRequest) {
