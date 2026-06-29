@@ -78,12 +78,12 @@ export default function CheckIn() {
             <p className="wtw-checkin">Guest Check-In</p>
             <form className="wtw-form" onSubmit={submit}>
               <div className="wtw-phone">
-                <span className="wtw-prefix">+601</span>
+                <span className="wtw-prefix">+60</span>
                 <input
                   className="wtw-input"
                   inputMode="numeric"
                   autoComplete="tel"
-                  placeholder="2345 6789"
+                  placeholder="12 345 6789"
                   value={digitsv}
                   onChange={e => setDigits(e.target.value.replace(/[^0-9]/g, ''))}
                   autoFocus

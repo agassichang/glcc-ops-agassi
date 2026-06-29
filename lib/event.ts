@@ -48,9 +48,15 @@ async function get(params: Record<string, string>) {
   }
 }
 
-// Build the stored phone format (601XXXXXXXX) from the digits a guest typed
-// after the fixed +601 prefix.
-export const fullPhone = (entered: string) => '601' + String(entered ?? '').replace(/[^0-9]/g, '')
+// Canonicalize to the stored Malaysian format (60XXXXXXXXX) regardless of how
+// the guest typed it: "123016504", "0123016504", "+60 12-301 6504" all become
+// "60123016504". The page shows a fixed +60 prefix.
+export const fullPhone = (entered: string) => {
+  let d = String(entered ?? '').replace(/[^0-9]/g, '')
+  if (d.startsWith('60')) return d
+  if (d.startsWith('0')) d = d.slice(1)
+  return '60' + d
+}
 
 export const eventCheckin = (phone: string) => post({ action: 'checkin', phone })
 export const eventList = () => get({ action: 'list' })
